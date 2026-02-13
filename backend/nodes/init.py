@@ -15,11 +15,12 @@ LangGraph 노드 패키지
 
 from .node_1_input_router import node_1_input_router
 from .node_2_load_alarm_kpi import node_2_load_alarm_kpi
+from .node_3_context_fetch import node_3_context_fetch
+from .node_6_root_cause_analysis import node_6_root_cause_analysis
 
 __all__ = [
-    # Node 1
     'node_1_input_router',
-    
-    # Node 2
     'node_2_load_alarm_kpi',
+    'node_3_context_fetch',
+    'node_6_root_cause_analysis',
 ]

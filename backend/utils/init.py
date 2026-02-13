@@ -22,6 +22,16 @@ from .prompt_templates import (
     get_question_answer_prompt
 )
 
+from .data_utils import (
+    # ... 기존 함수들
+    get_latest_alarm
+)
+
+__all__ = [
+    # ...
+    'get_latest_alarm',
+]
+
 __all__ = [
     # 날짜/시간 함수
     'parse_datetime',

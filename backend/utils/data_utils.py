@@ -4,6 +4,37 @@
 
 from typing import Dict, List, Any, Tuple
 
+def get_latest_alarm():
+    """
+    가장 최근의 알람 정보를 조회합니다.
+    
+    SCENARIO_MAP에서 가장 최근 날짜의 알람을 반환합니다.
+    
+    Returns:
+        dict: 최신 알람 정보
+            - date: 날짜
+            - eqp_id: 장비 ID  
+            - kpi: KPI
+    """
+    from backend.config.supabase_config import supabase_config
+    
+    # SCENARIO_MAP을 날짜 내림차순으로 정렬하여 1개만 조회
+    result = supabase_config.client.table('scenario_map') \
+        .select('*') \
+        .order('date', desc=True) \
+        .limit(1) \
+        .execute()
+    
+    if not result.data:
+        return None
+    
+    latest = result.data[0]
+    
+    return {
+        'date': latest['date'],
+        'eqp_id': latest['alarm_eqp_id'],
+        'kpi': latest['alarm_kpi']
+    }
 
 def check_alarm_condition(
     kpi_name: str,

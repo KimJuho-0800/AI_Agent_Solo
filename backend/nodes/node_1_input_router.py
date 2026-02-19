@@ -34,7 +34,7 @@ def node_1_input_router(state: dict) -> dict:
         - alarm_date, alarm_eqp_id, alarm_kpi 설정
     
     질문 경로:
-        - input_data를 그대로 사용
+        - question_text 설정
     """
     
     print("\n" + "=" * 60)
@@ -85,8 +85,10 @@ def node_1_input_router(state: dict) -> dict:
         input_data = state.get('input_data', '')
         print(f"   질문: {input_data[:100]}...")
         
-        # State 업데이트 (특별한 처리 없음)
-        update = {}
+        # State 업데이트 - question_text 필드 설정
+        update = {
+            'question_text': input_data
+        }
     
     print("=" * 60 + "\n")
     

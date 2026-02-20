@@ -11,6 +11,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate }) => {
   const navItems = [
+    { id: 'dashboard', icon: '📊', label: '대시보드' },
     { id: 'alarm', icon: '🚨', label: '알람 모니터링' },
     { id: 'chatbot', icon: '💬', label: 'AI 챗봇' },
     { id: 'database', icon: '📊', label: '데이터베이스' },

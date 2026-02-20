@@ -1,13 +1,14 @@
 /**
- * 대시보드 개요 페이지 (차트 포함)
+ * 대시보드 개요 페이지
  */
 
 import React from 'react';
+import RealtimeKpiMonitor from '../components/RealtimeKpiMonitor';
 import KpiTrendChart from '../components/KpiTrendChart';
 import AlarmFrequencyChart from '../components/AlarmFrequencyChart';
 
 const DashboardOverview: React.FC = () => {
-  // 샘플 데이터 (실제로는 API에서 가져와야 함)
+  // 과거 7일 데이터
   const kpiTrendData = [
     { date: '01-25', oee_v: 65.2, oee_t: 70, thp_v: 245, thp_t: 250 },
     { date: '01-26', oee_v: 68.5, oee_t: 70, thp_v: 240, thp_t: 250 },
@@ -28,36 +29,50 @@ const DashboardOverview: React.FC = () => {
 
   return (
     <div>
-      {/* KPI 요약 카드 */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
-        <div className="card" style={{ padding: '20px' }}>
-          <div style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '8px' }}>총 알람</div>
-          <div style={{ fontSize: '32px', fontWeight: 700, color: '#60a5fa' }}>12</div>
-          <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>최근 7일</div>
-        </div>
-        <div className="card" style={{ padding: '20px' }}>
-          <div style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '8px' }}>평균 OEE</div>
-          <div style={{ fontSize: '32px', fontWeight: 700, color: '#4ade80' }}>69.7%</div>
-          <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>목표: 70%</div>
-        </div>
-        <div className="card" style={{ padding: '20px' }}>
-          <div style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '8px' }}>평균 처리량</div>
-          <div style={{ fontSize: '32px', fontWeight: 700, color: '#fbbf24' }}>237</div>
-          <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>목표: 250개</div>
-        </div>
-        <div className="card" style={{ padding: '20px' }}>
-          <div style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '8px' }}>다운타임</div>
-          <div style={{ fontSize: '32px', fontWeight: 700, color: '#f87171' }}>1.2h</div>
-          <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>최근 7일</div>
+      {/* 헤더 정보 */}
+      <div className="card" style={{ marginBottom: '20px' }}>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          padding: '10px'
+        }}>
+          <div>
+            <div style={{ fontSize: '14px', opacity: 0.7, marginBottom: '4px' }}>
+              시스템 상태
+            </div>
+            <div style={{ fontSize: '20px', fontWeight: 700 }}>
+              ● OPERATIONAL
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: '14px', opacity: 0.7, marginBottom: '4px' }}>
+              마지막 업데이트
+            </div>
+            <div style={{ fontSize: '16px', fontFamily: 'Roboto Mono' }}>
+              {new Date().toLocaleString('ko-KR')}
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: '14px', opacity: 0.7, marginBottom: '4px' }}>
+              총 모니터링 장비
+            </div>
+            <div style={{ fontSize: '20px', fontWeight: 700 }}>
+              12 UNITS
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* KPI 트렌드 차트 */}
-      <div className="card" style={{ marginBottom: '24px' }}>
+      {/* 실시간 KPI 모니터 */}
+      <RealtimeKpiMonitor />
+
+      {/* 과거 7일 트렌드 */}
+      <div className="card" style={{ marginTop: '30px' }}>
         <div className="card-header">
           <h2 className="card-title">
-            <span>📈</span>
-            KPI 트렌드 (최근 7일)
+            <span>📊</span>
+            주간 KPI 트렌드 (최근 7일)
           </h2>
         </div>
         <div className="card-body">
@@ -65,12 +80,12 @@ const DashboardOverview: React.FC = () => {
         </div>
       </div>
 
-      {/* 알람 빈도 차트 */}
+      {/* 알람 빈도 */}
       <div className="card">
         <div className="card-header">
           <h2 className="card-title">
-            <span>📊</span>
-            KPI별 알람 발생 빈도
+            <span>⚠️</span>
+            KPI별 알람 발생 통계
           </h2>
         </div>
         <div className="card-body">

@@ -6,6 +6,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { askQuestion } from '../services/api';
 import { ChatMessage } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
+import TypingIndicator from '../components/TypingIndicator';
 
 const ChatBotPage: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -101,11 +102,9 @@ const ChatBotPage: React.FC = () => {
         ))}
 
         {loading && (
-          <div className="message assistant">
-            <div className="message-content">
-              <LoadingSpinner message="" />
+            <div className="message assistant">
+                <TypingIndicator />
             </div>
-          </div>
         )}
 
         <div ref={messagesEndRef} />

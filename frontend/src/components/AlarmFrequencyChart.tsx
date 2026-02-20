@@ -24,11 +24,11 @@ interface AlarmFrequencyChartProps {
 
 const AlarmFrequencyChart: React.FC<AlarmFrequencyChartProps> = ({ data }) => {
   const colors: { [key: string]: string } = {
-    OEE: '#60a5fa',
-    THP: '#4ade80',
-    TAT: '#fbbf24',
-    WIP_EXCEED: '#f87171',
-    WIP_SHORTAGE: '#a78bfa',
+    OEE: '#00ff41',
+    THP: '#00d9ff',
+    TAT: '#ffff00',
+    WIP_EXCEED: '#ff0051',
+    WIP_SHORTAGE: '#ff00ff',
   };
 
   return (
@@ -38,22 +38,28 @@ const AlarmFrequencyChart: React.FC<AlarmFrequencyChartProps> = ({ data }) => {
           data={data}
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 255, 65, 0.1)" />
           <XAxis
             dataKey="kpi"
-            stroke="#94a3b8"
+            stroke="rgba(0, 255, 65, 0.5)"
             style={{ fontSize: '12px' }}
+            tick={{ fill: 'rgba(0, 255, 65, 0.6)' }}
           />
-          <YAxis stroke="#94a3b8" style={{ fontSize: '12px' }} />
+          <YAxis 
+            stroke="rgba(0, 255, 65, 0.5)" 
+            style={{ fontSize: '12px' }}
+            tick={{ fill: 'rgba(0, 255, 65, 0.6)' }}
+          />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#1e293b',
-              border: '1px solid #334155',
-              borderRadius: '8px',
-              color: '#e2e8f0',
+              backgroundColor: 'rgba(0, 0, 0, 0.95)',
+              border: '2px solid #00ff41',
+              borderRadius: '4px',
+              color: '#00ff41',
+              fontFamily: 'Roboto Mono',
             }}
           />
-          <Legend wrapperStyle={{ color: '#94a3b8', fontSize: '13px' }} />
+          <Legend wrapperStyle={{ color: '#00ff41', fontSize: '13px' }} />
           <Bar dataKey="count" name="알람 발생 횟수" radius={[8, 8, 0, 0]}>
             {data.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={colors[entry.kpi] || '#64748b'} />

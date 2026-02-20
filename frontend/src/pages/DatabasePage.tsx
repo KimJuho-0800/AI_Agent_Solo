@@ -3,6 +3,7 @@
  */
 
 import React, { useState } from 'react';
+import CacheStats from '../components/CacheStats';  // 추가
 
 const DatabasePage: React.FC = () => {
   const [selectedTable, setSelectedTable] = useState<string>('KPI_DAILY');
@@ -78,6 +79,7 @@ const DatabasePage: React.FC = () => {
 
   return (
     <div>
+      {/* 데이터베이스 테이블 조회 카드 */}
       <div className="card">
         <div className="card-header">
           <h2 className="card-title">
@@ -122,6 +124,9 @@ const DatabasePage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* 캐시 통계 카드 (새로 추가된 부분) */}
+      <CacheStats />
     </div>
   );
 };

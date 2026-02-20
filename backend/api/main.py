@@ -13,7 +13,8 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from backend.api.routes import alarm, question
+# 이제 backend로 시작하는 import 사용 가능
+from backend.api.routes import alarm, question, system
 from backend.api.models import HealthResponse, ErrorResponse
 
 # FastAPI 앱 생성
@@ -37,6 +38,7 @@ app.add_middleware(
 # 라우터 등록
 app.include_router(alarm.router, prefix="/api")
 app.include_router(question.router, prefix="/api")
+app.include_router(system.router, prefix="/api")
 
 
 # 전역 예외 핸들러
@@ -81,10 +83,11 @@ async def root():
         "health": "/health"
     }
 
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
-        "backend.api.main:app",  # 문자열로 전달
+        "backend.api.main:app",
         host="0.0.0.0",
         port=8000,
         reload=True

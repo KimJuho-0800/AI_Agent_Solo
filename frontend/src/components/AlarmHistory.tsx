@@ -7,6 +7,7 @@ import { analyzeAlarm } from '../services/api';
 import { AlarmAnalyzeResponse } from '../types';
 import LoadingSpinner from './LoadingSpinner';
 import ReportViewer from './ReportViewer';
+import AnalysisProgress from './AnalysisProgress';
 
 const AlarmHistory: React.FC = () => {
   // 하드코딩된 과거 알람 목록 (실제로는 API에서 가져와야 함)
@@ -94,11 +95,7 @@ const AlarmHistory: React.FC = () => {
       </div>
 
       {/* 로딩 */}
-      {loading && (
-        <div className="card">
-          <LoadingSpinner message="과거 알람을 분석하고 있습니다..." />
-        </div>
-      )}
+      <AnalysisProgress isAnalyzing={loading} />
 
       {/* 선택된 알람 분석 결과 */}
       {analysisResult && !loading && (

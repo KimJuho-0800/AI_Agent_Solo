@@ -7,6 +7,7 @@ import { getLatestAlarm, analyzeAlarm } from '../services/api';
 import { AlarmAnalyzeResponse } from '../types';
 import LoadingSpinner from './LoadingSpinner';
 import ReportViewer from './ReportViewer';
+import AnalysisProgress from './AnalysisProgress';
 
 const AlarmAnalysis: React.FC = () => {
   const [latestAlarm, setLatestAlarm] = useState<any>(null);
@@ -97,12 +98,8 @@ const AlarmAnalysis: React.FC = () => {
         )}
       </div>
 
-      {/* 로딩 */}
-      {loading && (
-        <div className="card">
-          <LoadingSpinner message="AI가 데이터를 분석하고 있습니다..." />
-        </div>
-      )}
+      {/* 진행 상태 (LoadingSpinner 대체) */}
+      <AnalysisProgress isAnalyzing={loading} />
 
       {/* 에러 */}
       {error && (

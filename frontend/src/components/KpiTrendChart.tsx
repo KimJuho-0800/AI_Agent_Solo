@@ -32,36 +32,42 @@ const KpiTrendChart: React.FC<KpiTrendChartProps> = ({ data }) => {
           data={data}
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 255, 65, 0.1)" />
           <XAxis
             dataKey="date"
-            stroke="#94a3b8"
+            stroke="rgba(0, 255, 65, 0.5)"
             style={{ fontSize: '12px' }}
+            tick={{ fill: 'rgba(0, 255, 65, 0.6)' }}
           />
-          <YAxis stroke="#94a3b8" style={{ fontSize: '12px' }} />
+          <YAxis 
+            stroke="rgba(0, 255, 65, 0.5)" 
+            style={{ fontSize: '12px' }}
+            tick={{ fill: 'rgba(0, 255, 65, 0.6)' }}
+          />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#1e293b',
-              border: '1px solid #334155',
-              borderRadius: '8px',
-              color: '#e2e8f0',
+              backgroundColor: 'rgba(0, 0, 0, 0.95)',
+              border: '2px solid #00ff41',
+              borderRadius: '4px',
+              color: '#00ff41',
+              fontFamily: 'Roboto Mono',
             }}
           />
           <Legend
-            wrapperStyle={{ color: '#94a3b8', fontSize: '13px' }}
+            wrapperStyle={{ color: '#00ff41', fontSize: '13px' }}
           />
           <Line
             type="monotone"
             dataKey="oee_v"
-            stroke="#60a5fa"
+            stroke="#00ff41"
             name="OEE 실제"
             strokeWidth={2}
-            dot={{ fill: '#60a5fa', r: 4 }}
+            dot={{ fill: '#00ff41', r: 4 }}
           />
           <Line
             type="monotone"
             dataKey="oee_t"
-            stroke="#3b82f6"
+            stroke="rgba(0, 255, 65, 0.5)"
             name="OEE 목표"
             strokeWidth={2}
             strokeDasharray="5 5"
@@ -70,15 +76,15 @@ const KpiTrendChart: React.FC<KpiTrendChartProps> = ({ data }) => {
           <Line
             type="monotone"
             dataKey="thp_v"
-            stroke="#4ade80"
+            stroke="#00d9ff"
             name="THP 실제"
             strokeWidth={2}
-            dot={{ fill: '#4ade80', r: 4 }}
+            dot={{ fill: '#00d9ff', r: 4 }}
           />
           <Line
             type="monotone"
             dataKey="thp_t"
-            stroke="#16a34a"
+            stroke="rgba(0, 217, 255, 0.5)"
             name="THP 목표"
             strokeWidth={2}
             strokeDasharray="5 5"

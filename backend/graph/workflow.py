@@ -16,6 +16,7 @@ sys.path.insert(0, str(project_root))
 
 from langgraph.graph import StateGraph, END
 from backend.graph.state import AgentState
+from backend.utils.cache import analysis_cache, qa_cache
 
 # 각 노드 함수 개별 import
 from backend.nodes.node_1_input_router import node_1_input_router
@@ -124,6 +125,8 @@ def run_alarm_analysis(alarm_date: str = None, alarm_eqp_id: str = None, alarm_k
     """
     알람 분석 워크플로우를 실행합니다.
     
+    캐싱을 사용하여 동일한 알람 재분석 시 LLM 비용을 절감합니다.
+    
     Args:
         alarm_date: 알람 날짜 (None이면 최신 알람)
         alarm_eqp_id: 장비 ID (None이면 최신 알람)
@@ -131,24 +134,28 @@ def run_alarm_analysis(alarm_date: str = None, alarm_eqp_id: str = None, alarm_k
     
     Returns:
         AgentState: 최종 State
-    
-    Examples:
-        >>> # 최신 알람 분석
-        >>> result = run_alarm_analysis()
-        
-        >>> # 특정 알람 분석
-        >>> result = run_alarm_analysis(
-        ...     alarm_date="2026-01-20",
-        ...     alarm_eqp_id="EQP01",
-        ...     alarm_kpi="OEE"
-        ... )
     """
     
     print("\n" + "=" * 60)
     print("🚀 알람 분석 워크플로우 시작")
     print("=" * 60 + "\n")
     
-    # 초기 State
+    # 1. 캐시 키 생성
+    if alarm_date and alarm_eqp_id and alarm_kpi:
+        cache_key = analysis_cache.generate_key('alarm', alarm_date, alarm_eqp_id, alarm_kpi)
+    else:
+        # 최신 알람은 캐시하지 않음 (매번 새로운 결과를 보여주기 위해)
+        cache_key = None
+    
+    # 2. 캐시 확인
+    if cache_key:
+        cached_result = analysis_cache.get(cache_key)
+        if cached_result:
+            print("✅ 캐시된 분석 결과 사용 (LLM 호출 생략)")
+            print("=" * 60 + "\n")
+            return cached_result
+    
+    # 3. 초기 State
     initial_state = {
         'input_type': 'alarm',
         'metadata': {'llm_calls': 0}
@@ -160,9 +167,13 @@ def run_alarm_analysis(alarm_date: str = None, alarm_eqp_id: str = None, alarm_k
         initial_state['alarm_eqp_id'] = alarm_eqp_id
         initial_state['alarm_kpi'] = alarm_kpi
     
-    # 워크플로우 실행
+    # 4. 워크플로우 실행
     app = get_workflow_app()
     final_state = app.invoke(initial_state)
+    
+    # 5. 결과 캐싱 (에러가 없고, 특정 알람인 경우만)
+    if cache_key and 'error' not in final_state and final_state.get('rag_saved'):
+        analysis_cache.set(cache_key, final_state)
     
     print("\n" + "=" * 60)
     print("✅ 알람 분석 워크플로우 완료")
@@ -175,30 +186,45 @@ def run_question_answer(question: str) -> AgentState:
     """
     질문 답변 워크플로우를 실행합니다.
     
+    동일한 질문에 대해 캐싱을 사용합니다.
+    
     Args:
         question: 사용자 질문
     
     Returns:
         AgentState: 최종 State
-    
-    Examples:
-        >>> result = run_question_answer("EQP01에서 OEE 문제가 발생한 이유는?")
     """
     
     print("\n" + "=" * 60)
     print("🚀 질문 답변 워크플로우 시작")
     print("=" * 60 + "\n")
     
-    # 초기 State
+    # 1. 캐시 키 생성 (질문의 해시값 사용)
+    import hashlib
+    question_hash = hashlib.md5(question.lower().strip().encode()).hexdigest()
+    cache_key = qa_cache.generate_key('question', question_hash)
+    
+    # 2. 캐시 확인
+    cached_result = qa_cache.get(cache_key)
+    if cached_result:
+        print("✅ 캐시된 답변 사용 (LLM 호출 생략)")
+        print("=" * 60 + "\n")
+        return cached_result
+    
+    # 3. 초기 State
     initial_state = {
         'input_type': 'question',
         'input_data': question,
         'metadata': {'llm_calls': 0}
     }
     
-    # 워크플로우 실행
+    # 4. 워크플로우 실행
     app = get_workflow_app()
     final_state = app.invoke(initial_state)
+    
+    # 5. 결과 캐싱 (에러가 없는 경우만)
+    if 'error' not in final_state and final_state.get('final_answer'):
+        qa_cache.set(cache_key, final_state)
     
     print("\n" + "=" * 60)
     print("✅ 질문 답변 워크플로우 완료")
